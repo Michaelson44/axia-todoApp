@@ -68,4 +68,12 @@ const oAuth = async (req, res) => {
     }
 };
 
-module.exports = {register, login, oAuth};
+const logOut = async (req, res) => {
+    try {
+        res.clearCookie("token").status(200).json({message: "user has been logged out"})
+    } catch (error) {
+        res.status(500).json(error.message);
+    }
+}
+
+module.exports = {register, login, oAuth, logOut};
