@@ -20,23 +20,6 @@ const postCategory = async (req, res) => {
     }
 }
 
-const updateCategory = async (req, res) => {
-    const {name, ...others} = req.body;
-
-    try {
-        // validate category
-        const category = await categoryModel.findOne({name});
-        if (!category) {
-            return res.status(404).json({success: false, error: "category not found"});
-        }
-
-        await categoryModel.findByIdAndUpdate(id, {...others}, {new: true});
-        res.status(200).json({success: true, message: "category updated"});
-    } catch (err) {
-        res.status(500).json(err.message);
-    }
-};
-
 
 const deleteCategory = async (req, res) => {
     const {id} = req.query;
@@ -76,4 +59,4 @@ const getCategory = async (req, res) => {
     }
 }
 
-module.exports = {postCategory, updateCategory, getCategories, getCategory, deleteCategory}
+module.exports = {postCategory, getCategories, getCategory, deleteCategory}
