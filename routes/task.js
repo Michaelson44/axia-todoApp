@@ -9,8 +9,8 @@ router.get("/task", singleTask);
 router.delete("/delete-task",verify, deleteTask);
 router.put("/update-task",verify, updateTask);
 router.put("/complete-task",verify, completedTask);
-router.get("/get-deadline", getDeadline);
-router.get("/get-all-deadline", getAllDeadlines);
+router.get("/get-deadline", verify, getDeadline);
+router.get("/get-all-deadline",verify, getAllDeadlines);
 
 
 module.exports = router;

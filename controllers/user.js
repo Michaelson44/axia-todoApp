@@ -26,7 +26,10 @@ const updateUser = async (req, res) => {
     const {password, ...others} = req.body;
     const {id} = req.user;
     try {
-        await userModel.findByIdAndUpdate(id, {...others}, {new: true});
+        const updated = await userModel.findByIdAndUpdate(id, {...others}, {new: true});
+        if (!updated) {
+            return res.status(321).json({success: false, error: "something went wrong"});
+        }
         res.status(200).json({message: "user info updated"});
     } catch (err) {
         res.status(500).json(err.message);

@@ -61,11 +61,16 @@ const singleTask = async (req, res) => {
 
 const deleteTask = async (req, res) => {
     const {id} = req.query;
+    const userId = req.user.id;
     try {
         // validate task
         const task = await taskModel.findById(id);
         if (!task) {
             return res.status(404).json({success: false, error: "task not found"});
+        }
+        // validate user
+        if (task.creatorId !== userId) {
+            return res.status(321).json({success: false, error: "you are not authorized for that"})
         }
         await taskModel.findByIdAndDelete(id);
         res.status(200).json({success: true, message: "task has been deleted"});
@@ -78,11 +83,16 @@ const updateTask = async (req, res) => {
     // normally we would get the things we dont want them to update
     // but this is a todo list they can update things
     const {id, ...others} = req.body;
+    const userId = req.user.id;
     try {
         // validate task
         const task = await taskModel.findById(id);
         if (!task) {
             return res.status(404).json({success: false, error: "task not found"});
+        }
+        // validate user
+        if (task.creatorId !== userId) {
+            return res.status(321).json({success: false, error: "you are not authorized for that"})
         }
         await taskModel.findByIdAndUpdate(id, {...others}, {new: true});
         res.status(201).json({success: true, message: "post has been updated"});
@@ -92,9 +102,20 @@ const updateTask = async (req, res) => {
 };
 
 const completedTask = async (req, res) => {
-    const {id} = req.params;
+    const {taskId} = req.params;
+    const userId = req.user.id;
     try {
-        await taskModel.findByIdAndUpdate(id, {completed: true}, {new: true});
+        const task = await taskModel.findById(taskId);
+        // validate task 
+        if (!task) {
+            return res.status(404).json({success: false, error: "task not found"});
+        }
+        // validate user
+        if (task.creatorId !== userId) {
+            return res.status(321).json({success: false, error: "you are not authorized for that"})
+        }
+
+        await taskModel.findByIdAndUpdate(taskId, {completed: true}, {new: true});
         res.status(200).json({success: true, message: "task has been completed"});
     } catch(err) {
         res.status(500).json(err.message);
