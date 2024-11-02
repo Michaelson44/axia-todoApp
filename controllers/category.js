@@ -59,4 +59,21 @@ const getCategory = async (req, res) => {
     }
 }
 
-module.exports = {postCategory, getCategories, getCategory, deleteCategory}
+const updateCategory = async (req, res) => {
+    const {name} = req.body;
+
+    try {
+        // validate category
+        const category = await categoryModel.findOne({name});
+        if (!category) {
+            return res.status(404).json({success: false, error: "category not found"});
+        }
+
+        await categoryModel.findByIdAndUpdate(id, {name}, {new: true});
+        res.status(200).json({success: true, message: "category updated"});
+    } catch (err) {
+        res.status(500).json(err.message);
+    }
+};
+
+module.exports = {postCategory, getCategories, getCategory, deleteCategory, updateCategory}
