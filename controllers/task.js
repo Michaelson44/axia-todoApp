@@ -50,7 +50,7 @@ const getTasks = async (req, res) => {
 };
 
 const singleTask = async (req, res) => {
-    const {id} = req.body;
+    const {id} = req.params;
     try {
         const task = await taskModel.findById(id);
         res.status(200).json(task);
